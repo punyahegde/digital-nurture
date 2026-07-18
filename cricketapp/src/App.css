@@ -1,0 +1,15 @@
+.App {
+  padding: 20px;
+}
+
+h1 {
+  text-align: left;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin: 5px 0;
+}
