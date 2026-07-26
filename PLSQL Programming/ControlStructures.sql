@@ -1,101 +1,89 @@
-SET SERVEROUTPUT ON;
+/* ============================================================
+   Exercise 1 - Scenario 1
+   Apply 1% discount to loan interest rates for customers
+   above 60 years of age.
+   ============================================================ */
 
 DECLARE
-    v_balance NUMBER;
+    CURSOR customer_cursor IS
+        SELECT c.CustomerID,
+               c.Name,
+               c.DOB,
+               l.LoanID,
+               l.InterestRate
+        FROM Customers c
+                 JOIN Loans l
+                      ON c.CustomerID = l.CustomerID;
+
+    v_age NUMBER;
+
 BEGIN
-    SELECT Balance
-    INTO v_balance
-    FROM Accounts
-    WHERE AccountID = 1;
+    FOR cust IN customer_cursor LOOP
 
-    IF v_balance < 500 THEN
-        UPDATE Accounts
-        SET Balance = Balance - 50
-        WHERE AccountID = 1;
+            v_age := FLOOR(MONTHS_BETWEEN(SYSDATE, cust.DOB) / 12);
 
-        DBMS_OUTPUT.PUT_LINE('Maintenance fee of 50 deducted.');
-    ELSE
-        DBMS_OUTPUT.PUT_LINE('No maintenance fee charged.');
-    END IF;
+            IF v_age > 60 THEN
+                UPDATE Loans
+                SET InterestRate = InterestRate - 1
+                WHERE LoanID = cust.LoanID;
+
+                DBMS_OUTPUT.PUT_LINE(
+                        cust.Name || ' is above 60 years. Interest rate reduced by 1%.'
+                );
+            END IF;
+
+        END LOOP;
 
     COMMIT;
 END;
 /
-SELECT * FROM Accounts;
 
-
-
-SET SERVEROUTPUT ON;
-
-BEGIN
-    UPDATE Loans
-    SET InterestRate = InterestRate - 1
-    WHERE EndDate > SYSDATE;
-
-    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' loan(s) updated.');
-
-    COMMIT;
-END;
-/
-SELECT * FROM Loans;
-
-
-
-SET SERVEROUTPUT ON;
-
-DECLARE
-    CURSOR c_customers IS
-        SELECT CustomerID, Name
-        FROM Customers;
+/* ============================================================
+   Exercise 1 - Scenario 2
+   Promote customers with balance greater than 10000 to VIP.
+   ============================================================ */
 
 BEGIN
-    FOR rec IN c_customers LOOP
-        DBMS_OUTPUT.PUT_LINE(
-            'Reminder sent to Customer ID: ' ||
-            rec.CustomerID || ' - ' || rec.Name
-        );
-    END LOOP;
-END;
-/
 
+    UPDATE Customers
+    SET IsVIP = 'TRUE'
+    WHERE Balance > 10000;
 
-
-
-SET SERVEROUTPUT ON;
-
-DECLARE
-    v_amount NUMBER := 200;
-BEGIN
-    UPDATE Accounts
-    SET Balance = Balance - v_amount
-    WHERE AccountID = 1;
-
-    UPDATE Accounts
-    SET Balance = Balance + v_amount
-    WHERE AccountID = 2;
+    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' customer(s) promoted to VIP.');
 
     COMMIT;
 
-    DBMS_OUTPUT.PUT_LINE('Funds transferred successfully.');
 END;
 /
-SELECT AccountID, Balance
-FROM Accounts;
 
-SET SERVEROUTPUT ON;
+/* ============================================================
+   Exercise 1 - Scenario 3
+   Display reminders for loans due within the next 30 days.
+   ============================================================ */
 
 DECLARE
-    CURSOR c_emp IS
-        SELECT EmployeeID, Name, Salary
-        FROM Employees;
-    v_bonus NUMBER;
-BEGIN
-    FOR emp IN c_emp LOOP
-        v_bonus := emp.Salary * 0.10;
+    CURSOR loan_cursor IS
+        SELECT c.CustomerID,
+               c.Name,
+               l.LoanID,
+               l.EndDate
+        FROM Customers c
+                 JOIN Loans l
+                      ON c.CustomerID = l.CustomerID
+        WHERE l.EndDate BETWEEN SYSDATE AND SYSDATE + 30;
 
-        DBMS_OUTPUT.PUT_LINE(
-            emp.Name || ' Bonus = ' || v_bonus
-        );
-    END LOOP;
+BEGIN
+
+    FOR loan_rec IN loan_cursor LOOP
+
+            DBMS_OUTPUT.PUT_LINE(
+                    'Reminder: Loan ID ' || loan_rec.LoanID ||
+                    ' for Customer ' || loan_rec.Name ||
+                    ' is due on ' ||
+                    TO_CHAR(loan_rec.EndDate, 'DD-MON-YYYY')
+            );
+
+        END LOOP;
+
 END;
 /
