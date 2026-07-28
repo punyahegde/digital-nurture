@@ -1,0 +1,51 @@
+<div
+  class="course-card"
+  appHighlight="lightyellow"
+  (click)="viewCourse()"
+>
+
+  <h2>{{ course.name }}</h2>
+
+  <p><strong>ID:</strong> {{ course.id }}</p>
+
+  <p><strong>Code:</strong> {{ course.code }}</p>
+
+  <p [ngStyle]="getCreditStyle()">
+    <strong>Credits:</strong>
+    {{ course.credits | creditLabel }}
+  </p>
+
+  <p [ngClass]="getLevelClass()">
+    <strong>Level:</strong>
+    {{ course.level }}
+  </p>
+
+  <p>
+    <strong>Status:</strong>
+
+    <span [ngSwitch]="course.gradeStatus">
+
+      <span *ngSwitchCase="'Passed'">
+        ✅ Passed
+      </span>
+
+      <span *ngSwitchCase="'Pending'">
+        ⏳ Pending
+      </span>
+
+      <span *ngSwitchCase="'Failed'">
+        ❌ Failed
+      </span>
+
+      <span *ngSwitchDefault>
+        Not Available
+      </span>
+
+    </span>
+  </p>
+
+  <button (click)="$event.stopPropagation(); enroll()">
+    {{ isEnrolled() ? 'Unenroll' : 'Enroll' }}
+  </button>
+
+</div>

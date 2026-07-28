@@ -1,0 +1,41 @@
+<div class="container">
+
+  <h1>Student Profile</h1>
+
+  <nav>
+
+    <a routerLink="details">View Profile Details</a>
+
+  </nav>
+
+  <br>
+
+  <router-outlet></router-outlet>
+
+  <hr>
+
+  <h3>Enrolled Courses</h3>
+
+  <div *ngIf="enrolledCourses.length === 0">
+
+    <p>No enrolled courses found.</p>
+
+  </div>
+
+  <ul *ngIf="enrolledCourses.length > 0">
+
+    <li *ngFor="let course of enrolledCourses">
+
+      <strong>{{ course.name }}</strong>
+
+      ({{ course.code }})
+
+      - {{ course.credits }} Credits
+
+      - {{ course.level }}
+
+    </li>
+
+  </ul>
+
+</div>

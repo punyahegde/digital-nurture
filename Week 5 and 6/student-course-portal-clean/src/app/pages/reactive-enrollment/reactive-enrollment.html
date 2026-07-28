@@ -1,0 +1,201 @@
+<div class="container">
+
+  <h2>Reactive Enrollment Form</h2>
+
+  <form
+    [formGroup]="enrollmentForm"
+    (ngSubmit)="onSubmit()">
+
+    <!-- Name -->
+    <div class="form-group">
+
+      <label>Name</label>
+
+      <input
+        type="text"
+        formControlName="name">
+
+      <div
+        class="error"
+        *ngIf="f['name'].touched && f['name'].errors?.['required']">
+        Name is required.
+      </div>
+
+      <div
+        class="error"
+        *ngIf="f['name'].touched && f['name'].errors?.['minlength']">
+        Name must be at least 3 characters.
+      </div>
+
+    </div>
+
+    <br>
+
+    <!-- Email -->
+    <div class="form-group">
+
+      <label>Email</label>
+
+      <input
+        type="email"
+        formControlName="email">
+
+      <div
+        class="error"
+        *ngIf="f['email'].touched && f['email'].errors?.['required']">
+        Email is required.
+      </div>
+
+      <div
+        class="error"
+        *ngIf="f['email'].touched && f['email'].errors?.['email']">
+        Enter a valid email.
+      </div>
+
+      <div
+        class="error"
+        *ngIf="f['email'].pending">
+        Checking email availability...
+      </div>
+
+      <div
+        class="error"
+        *ngIf="f['email'].touched && f['email'].errors?.['emailTaken']">
+        Email is already taken.
+      </div>
+
+    </div>
+
+    <br>
+
+    <!-- Course ID -->
+    <div class="form-group">
+
+      <label>Course ID</label>
+
+      <input
+        type="text"
+        formControlName="courseId">
+
+      <div
+        class="error"
+        *ngIf="f['courseId'].touched && f['courseId'].errors?.['required']">
+        Course ID is required.
+      </div>
+
+      <div
+        class="error"
+        *ngIf="f['courseId'].touched && f['courseId'].errors?.['noCourseCode']">
+        Course code starting with XX is not allowed.
+      </div>
+
+    </div>
+
+    <br>
+
+    <!-- Preferred Semester -->
+    <div class="form-group">
+
+      <label>Preferred Semester</label>
+
+      <select formControlName="preferredSemester">
+        <option value="Odd">Odd</option>
+        <option value="Even">Even</option>
+      </select>
+
+    </div>
+
+    <br>
+
+    <!-- Terms -->
+    <div class="form-group">
+
+      <label>
+
+        <input
+          type="checkbox"
+          formControlName="agreeToTerms">
+
+        I agree to the Terms & Conditions
+
+      </label>
+
+      <div
+        class="error"
+        *ngIf="f['agreeToTerms'].touched && f['agreeToTerms'].errors?.['required']">
+        You must agree before submitting.
+      </div>
+
+    </div>
+
+    <hr>
+
+    <!-- Additional Courses -->
+    <h3>Additional Courses</h3>
+
+    <div formArrayName="additionalCourses">
+
+      <div *ngFor="let control of additionalCourses.controls; let i = index">
+
+        <input
+          type="text"
+          [formControlName]="i"
+          placeholder="Additional Course">
+
+        <button
+          type="button"
+          (click)="removeCourse(i)">
+          Remove
+        </button>
+
+      </div>
+
+    </div>
+
+    <br>
+
+    <button
+      type="button"
+      (click)="addCourse()">
+      Add Another Course
+    </button>
+
+    <br><br>
+
+    <button
+      type="submit"
+      [disabled]="enrollmentForm.invalid">
+      Submit
+    </button>
+
+  </form>
+
+  <hr>
+
+  <div *ngIf="submitted">
+
+    <h3>Enrollment Successful!</h3>
+
+    <p>
+      <strong>Name:</strong>
+      {{ submittedStudent.name }}
+    </p>
+
+    <p>
+      <strong>Email:</strong>
+      {{ submittedStudent.email }}
+    </p>
+
+    <p>
+      <strong>Course ID:</strong>
+      {{ submittedStudent.courseId }}
+    </p>
+
+    <p>
+      <strong>Preferred Semester:</strong>
+      {{ submittedStudent.preferredSemester }}
+    </p>
+
+  </div>
+
+</div>

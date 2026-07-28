@@ -1,0 +1,46 @@
+
+<div class="container">
+  <app-notification></app-notification>
+  <h1>{{ portalName }}</h1>
+
+  <p>
+    Manage your courses and student profile efficiently.
+  </p>
+
+  <button
+    [disabled]="!isPortalActive"
+    (click)="onEnrollClick()">
+    Enroll Now
+  </button>
+
+  <p>{{ message }}</p>
+
+  <br>
+
+  <input
+    type="text"
+    placeholder="Search courses..."
+    [(ngModel)]="searchTerm">
+
+  <p>Searching for: {{ searchTerm }}</p>
+
+  <div class="cards">
+
+    <div class="card">
+      <h2>12</h2>
+      <p>Courses Available</p>
+    </div>
+
+    <div class="card">
+      <h2>3</h2>
+      <p>Enrolled</p>
+    </div>
+
+    <div class="card">
+      <h2>3.8</h2>
+      <p>GPA</p>
+    </div>
+
+  </div>
+
+</div>

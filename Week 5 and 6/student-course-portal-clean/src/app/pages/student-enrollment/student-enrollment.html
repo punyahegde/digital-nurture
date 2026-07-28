@@ -1,0 +1,112 @@
+<div class="container">
+
+  <h2>Student Enrollment</h2>
+
+  <form
+    #enrollmentForm="ngForm"
+    (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+
+      <label>Name</label>
+
+      <input
+        type="text"
+        name="name"
+        required
+        #name="ngModel"
+        [(ngModel)]="student.name">
+
+      <div
+        class="error"
+        *ngIf="name.invalid && name.touched">
+
+        Name is required.
+
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="form-group">
+
+      <label>Email</label>
+
+      <input
+        type="email"
+        name="email"
+        required
+        email
+        #email="ngModel"
+        [(ngModel)]="student.email">
+
+      <div
+        class="error"
+        *ngIf="email.invalid && email.touched">
+
+        Enter a valid email.
+
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="form-group">
+
+      <label>Course</label>
+
+      <input
+        type="text"
+        name="course"
+        required
+        #course="ngModel"
+        [(ngModel)]="student.course">
+
+      <div
+        class="error"
+        *ngIf="course.invalid && course.touched">
+
+        Course is required.
+
+      </div>
+
+    </div>
+
+    <br>
+
+    <button
+      type="submit"
+      [disabled]="enrollmentForm.invalid">
+
+      Enroll
+
+    </button>
+
+  </form>
+
+  <hr>
+
+  <div *ngIf="submitted">
+
+    <h3>Enrollment Successful!</h3>
+
+    <p>
+      <strong>Name:</strong>
+      {{ submittedStudent.name }}
+    </p>
+
+    <p>
+      <strong>Email:</strong>
+      {{ submittedStudent.email }}
+    </p>
+
+    <p>
+      <strong>Course:</strong>
+      {{ submittedStudent.course }}
+    </p>
+
+  </div>
+
+</div>

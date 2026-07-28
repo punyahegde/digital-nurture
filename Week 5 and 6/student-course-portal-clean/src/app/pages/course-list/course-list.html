@@ -1,0 +1,111 @@
+<div class="container">
+
+  <h1>{{ 'Course List' | titlecase }}</h1>
+
+  <div style="margin: 15px 0;">
+
+    <label><strong>Search Course:</strong></label>
+
+    <br><br>
+
+    <input
+      type="text"
+      placeholder="Search..."
+      [(ngModel)]="searchTerm"
+      (input)="updateSearch(searchTerm)">
+
+    <p>
+      Query Parameter Search:
+      <strong>{{ searchTerm }}</strong>
+    </p>
+
+  </div>
+
+  <hr>
+
+  <!-- Loading State -->
+  <div *ngIf="loading$ | async; else content">
+    <p>Loading courses...</p>
+  </div>
+
+  <!-- Main Content -->
+  <ng-template #content>
+
+    <!-- Error -->
+    <div *ngIf="error$ | async as error">
+      <p style="color: red">{{ error }}</p>
+    </div>
+
+    <!-- Course List -->
+    <div *ngIf="courses$ | async as courses; else noCourses">
+
+      <div
+        *ngFor="let c of courses; trackBy: trackByCourseId"
+        appHighlight="lightyellow">
+
+        <app-course-card
+          [course]="c"
+          (enrollRequested)="onEnroll($event)">
+        </app-course-card>
+
+        <p>
+          <strong>Course Level:</strong>
+          {{ c.level | courseLevel }}
+        </p>
+
+        <hr>
+
+      </div>
+
+    </div>
+
+    <!-- Empty List -->
+    <ng-template #noCourses>
+      <p>No courses available.</p>
+    </ng-template>
+
+  </ng-template>
+
+  <!-- Selected Course -->
+  <div *ngIf="selectedCourseId">
+    <p>
+      <strong>Selected Course ID:</strong>
+      {{ selectedCourseId }}
+    </p>
+  </div>
+
+  <hr>
+
+  <h2>Angular Pipes Demo</h2>
+
+  <p>
+    <strong>Uppercase:</strong>
+    {{ 'student portal' | uppercase }}
+  </p>
+
+  <p>
+    <strong>Lowercase:</strong>
+    {{ 'STUDENT PORTAL' | lowercase }}
+  </p>
+
+  <p>
+    <strong>Titlecase:</strong>
+    {{ 'student course portal' | titlecase }}
+  </p>
+
+  <p>
+    <strong>Date:</strong>
+    {{ today | date:'fullDate' }}
+  </p>
+
+  <p>
+    <strong>Currency:</strong>
+    {{ courseFee | currency }}
+  </p>
+
+  <p>
+    <strong>Percent:</strong>
+    {{ completionRate | percent }}
+  </p>
+
+</div>
